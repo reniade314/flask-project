@@ -1,0 +1,34 @@
+---
+- name: Configure EC2 instances
+  hosts: ec2_instances
+  become: yes
+  tasks:
+    - name: Update package cache and install Python
+      package:
+        name: python3
+        state: present
+
+    - name: Install virtualenv
+      pip:
+        name: virtualenv
+        state: present
+
+    - name: Create virtual environment
+      command: virtualenv /opt/flask_app_env
+      args:
+        creates: /opt/flask_app_env/bin/activate
+
+    - name: Activate virtual environment and install Flask
+      command: /opt/flask_app_env/bin/pip install flask
+      become_user: ec2-user
+
+    - name: Copy Flask app code to servers
+      copy:
+        src: /path/to/your/flask_app
+        dest: /opt/flask_app
+        remote_src: yes
+
+    - name: Set up Flask app configuration
+      template:
+        src: /path/to/your/flask_config_file.j2
+        dest: /opt/flask_app/config.ini
