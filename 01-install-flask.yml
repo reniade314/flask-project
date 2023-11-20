@@ -1,34 +1,65 @@
 ---
-- name: Configure EC2 instances
-  hosts: ec2_instances
+- name: Configure CentOS EC2 instances
+  hosts: n1
   become: yes
+  vars:
+    app_directory: /opt/flask_app
+    git_repo_url: https://github.com/reniade314/flask-project.git
+
   tasks:
-    - name: Update package cache and install Python
-      package:
+    - name: Clone GitHub repository
+      git:
+        repo: "{{ git_repo_url }}"
+        dest: "{{ app_directory }}/repository"
+      become_user: centos
+
+    - name: Update repositories and install Python
+      yum:
         name: python3
         state: present
 
-    - name: Install virtualenv
-      pip:
-        name: virtualenv
+    - name: Install pip (Python package manager)
+      yum:
+        name: python3-pip
         state: present
 
-    - name: Create virtual environment
-      command: virtualenv /opt/flask_app_env
-      args:
-        creates: /opt/flask_app_env/bin/activate
+    - name: Install virtualenv package
+      pip:
+        name: virtualenv
+        executable: pip3
+        state: present
 
-    - name: Activate virtual environment and install Flask
-      command: /opt/flask_app_env/bin/pip install flask
-      become_user: ec2-user
+    - name: Create a virtual environment
+      command: virtualenv -p python3 venv
+      args:
+        chdir: "{{ app_directory }}/repository"
+      become_user: centos
+
+    - name: Activate the virtual environment
+      command: source {{ app_directory }}/repository/venv/bin/activate
+      become_user: centos
+
+    - name: Install Flask within the virtual environment
+      pip:
+        name: flask
+        executable: pip3
+        state: present
+
+    - name: Deactivate the virtual environment
+      command: deactivate
+      become_user: centos
 
     - name: Copy Flask app code to servers
-      copy:
-        src: /path/to/your/flask_app
-        dest: /opt/flask_app
-        remote_src: yes
+      synchronize:
+        src: "{{ app_directory }}/repository"
+        dest: "{{ app_directory }}"
+        delete: yes
+      become_user: centos
 
-    - name: Set up Flask app configuration
-      template:
-        src: /path/to/your/flask_config_file.j2
-        dest: /opt/flask_app/config.ini
+    - name: Run Flask app
+      command: nohup python3 flask.py &
+      args:
+        chdir: "{{ app_directory }}/repository"
+      become_user: centos
+
+...
