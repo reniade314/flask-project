@@ -11,7 +11,8 @@ pipeline {
                     installation: 'Ansible',
                     inventory: '/home/centos/flask-project/node.ini',
                     playbook: '/home/centos/flask-project/01-install-flask.yml',
-                    vaultTmpPath: ''
+                    vaultTmpPath: '',
+                    executable: '/usr/bin/ansible-playbook'  // Add this line with your Ansible playbook executable path
                 )
             }
         }
