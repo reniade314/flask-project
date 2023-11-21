@@ -62,6 +62,7 @@
     - name: Run Flask app
       command: nohup python3 app.py &
       async: 60
+      poll: 0
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
@@ -71,5 +72,5 @@
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
-      
+
 ...
