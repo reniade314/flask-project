@@ -3,7 +3,7 @@
   hosts: n1
   become: yes
   vars:
-    app_directory: /opt/flask_app
+    app_directory: /home/centos/ansible-flask
     git_repo_url: https://github.com/reniade314/flask-project.git
 
   tasks:
