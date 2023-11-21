@@ -60,9 +60,14 @@
         state: present
 
     - name: Run Flask app
-      command: python3 app.py &
+      command: nohup python3 app.py &
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
 
+    - name: Stop Flask app after 60 seconds
+      command: "sleep 60 && pkill -f 'python3 app.py'"
+      args:
+        chdir: "{{ app_directory }}/repository"
+      become_user: centos
 ...
