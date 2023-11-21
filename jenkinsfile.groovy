@@ -23,7 +23,7 @@ pipeline {
             echo 'Flask app deployment successful!'
         }
         failure {
-            echo 'Flask app deployment failed!'
+            echo 'Flask app deployment failed!' 
         }
     }
 }
