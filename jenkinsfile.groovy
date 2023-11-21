@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage('Deploy') {
+        stage('Deploy with Playbook') {
             steps {
                 // Execute Ansible playbook for deployment
                 ansiblePlaybook(
