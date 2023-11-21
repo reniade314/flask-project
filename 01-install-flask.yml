@@ -59,15 +59,8 @@
         executable: pip3
         state: present
 
-    - name: Copy Flask app code to servers
-      synchronize:
-        src: "{{ app_directory }}/repository"
-        dest: "{{ app_directory }}"
-        delete: yes
-      become_user: centos
-
     - name: Run Flask app
-      command: nohup python3 flask.py &
+      command: nohup python3 app.py &
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
