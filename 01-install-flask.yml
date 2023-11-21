@@ -1,4 +1,3 @@
----
 - name: Configure CentOS EC2 instances
   hosts: n1
   become: yes
@@ -40,18 +39,11 @@
         chdir: "{{ app_directory }}/repository"
       become_user: centos
 
-    - name: Activate the virtual environment
-      command: source {{ app_directory }}/repository/venv/bin/activate
-      become_user: centos
-
     - name: Install Flask within the virtual environment
       pip:
         name: flask
-        executable: pip3
+        executable: "{{ app_directory }}/repository/venv/bin/pip"
         state: present
-
-    - name: Deactivate the virtual environment
-      command: deactivate
       become_user: centos
 
     - name: Copy Flask app code to servers
@@ -62,9 +54,7 @@
       become_user: centos
 
     - name: Run Flask app
-      command: nohup python3 flask.py &
+      ansible.builtin.command: nohup {{ app_directory }}/repository/venv/bin/python3 flask.py &
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
-
-...
