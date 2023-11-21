@@ -1,3 +1,4 @@
+---
 - name: Configure CentOS EC2 instances
   hosts: n1
   become: yes
@@ -10,6 +11,13 @@
       yum:
         name: git
         state: present
+
+    - name: Create ansible-flask directory if it doesn't exist
+      ansible.builtin.file:
+        path: "{{ app_directory }}"
+        state: directory
+        mode: '0755'
+      become_user: centos
 
     - name: Clone GitHub repository
       git:
@@ -39,17 +47,18 @@
         chdir: "{{ app_directory }}/repository"
       become_user: centos
 
+    - name: Activate the virtual environment
+      command: source {{ app_directory }}/repository/venv/bin/activate
+      become_user: centos
+
     - name: Install Flask within the virtual environment
       pip:
         name: flask
-        executable: "{{ app_directory }}/repository/venv/bin/pip"
+        executable: pip3
         state: present
-      become_user: centos
 
-    - name: Ensure the app directory exists
-      ansible.builtin.file:
-        path: "{{ app_directory }}"
-        state: directory
+    - name: Deactivate the virtual environment
+      command: deactivate
       become_user: centos
 
     - name: Copy Flask app code to servers
@@ -60,7 +69,7 @@
       become_user: centos
 
     - name: Run Flask app
-      ansible.builtin.command: nohup {{ app_directory }}/repository/venv/bin/python3 flask.py &
+      command: nohup python3 flask.py &
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
