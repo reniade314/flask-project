@@ -1,8 +1,7 @@
 pipeline {
-    agent 'ansible-master'
+    agent { label 'ansible-master' }
 
     stages {
-
         stage('Deploy with Playbook') {
             steps {
                 // Execute Ansible playbook for deployment
