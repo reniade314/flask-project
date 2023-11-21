@@ -2,12 +2,6 @@ pipeline {
     agent 'ansible-master'
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout code from the repository
-                git branch: 'main', credentialsId: '3e7c1305-8065-4201-b132-d794720a01e1', url: 'https://github.com/reniade314/flask-project.git'
-            }
-        }
 
         stage('Deploy') {
             steps {
