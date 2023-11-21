@@ -4,49 +4,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the GitHub repository
-                git branch: 'main', credentialsId: 'your-credentials', url: 'https://github.com/your-username/your-repo.git'
+                // Checkout code from the repository
+                git branch: 'main', credentialsId: 'your-git-credentials', url: 'https://github.com/yourusername/your-flask-app.git'
             }
         }
 
-        stage('Build') {
+        stage('Deploy') {
             steps {
-                // Perform the build steps if any
-                sh 'mvn clean package' // Replace with your build commands
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Execute tests (if applicable)
-                sh 'mvn test' // Replace with your test commands
-            }
-        }
-
-        stage('Provision and Deploy') {
-            steps {
-                // Run Ansible playbooks for provisioning and deployment
-                ansiblePlaybook(
-                    credentialsId: 'ansible-credentials',
-                    playbook: '/path/to/ansible/playbook.yml',
-                    inventory: '/path/to/ansible/inventory',
-                    extras: '-e "app_version=1.0"' // Pass extra variables if needed
-                )
+                // Execute Ansible playbook for deployment
+                sh '''
+                    ansible-playbook deploy_flask_app.yml
+                '''
             }
         }
     }
 
     post {
-        always {
-            // Clean up or perform post-build actions
-        }
         success {
-            // Notify on successful deployment
-            echo 'Flask web app deployed successfully!'
+            echo 'Flask app deployment successful!'
         }
         failure {
-            // Notify in case of deployment failure
-            echo 'Flask web app deployment failed!'
+            echo 'Flask app deployment failed!'
         }
     }
 }
