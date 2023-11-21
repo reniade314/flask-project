@@ -5,15 +5,7 @@ pipeline {
         stage('Deploy with Playbook') {
             steps {
                 // Execute Ansible playbook for deployment
-                ansiblePlaybook(
-                    credentialsId: 'flask-1',
-                    disableHostKeyChecking: true,
-                    installation: 'Ansible',
-                    inventory: '/home/centos/flask-project/node.ini',
-                    playbook: '/home/centos/flask-project/01-install-flask.yml',
-                    vaultTmpPath: '',
-                    executable: '/usr/bin/ansible-playbook'  // Add this line with your Ansible playbook executable path
-                )
+                sh '/usr/bin/ansible-playbook -i /home/centos/flask-project/node.ini /home/centos/flask-project/01-install-flask.yml'
             }
         }
     }
