@@ -7,6 +7,11 @@
     git_repo_url: https://github.com/reniade314/flask-project.git
 
   tasks:
+    - name: Install git
+      yum:
+        name: git
+        state: present
+
     - name: Clone GitHub repository
       git:
         repo: "{{ git_repo_url }}"
