@@ -60,7 +60,7 @@
         state: present
 
     - name: Run Flask app
-      command: nohup python3 app.py &
+      command: python3 app.py &
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
