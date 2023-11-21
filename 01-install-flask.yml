@@ -70,7 +70,6 @@
     - name: Stop Flask app after 60 seconds
       command: "sleep 60 && pkill -f 'python3 app.py'"
       args:
-        chdir: "{{ app_directory }}/repository"
-      become_user: centos
+        warn: false
 
 ...
