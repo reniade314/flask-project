@@ -1,6 +1,6 @@
 ---
 - name: Configure CentOS EC2 instances
-  hosts: n2
+  hosts: g1
   become: yes
   vars:
     app_directory: /home/centos/ansible-flask
