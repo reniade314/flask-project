@@ -59,10 +59,6 @@
         executable: pip3
         state: present
 
-    - name: Deactivate the virtual environment
-      command: deactivate
-      become_user: centos
-
     - name: Copy Flask app code to servers
       synchronize:
         src: "{{ app_directory }}/repository"
