@@ -46,6 +46,12 @@
         state: present
       become_user: centos
 
+    - name: Ensure the app directory exists
+      ansible.builtin.file:
+        path: "{{ app_directory }}"
+        state: directory
+      become_user: centos
+
     - name: Copy Flask app code to servers
       synchronize:
         src: "{{ app_directory }}/repository"
@@ -58,3 +64,5 @@
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
+
+...
