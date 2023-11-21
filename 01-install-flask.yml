@@ -71,4 +71,5 @@
       args:
         chdir: "{{ app_directory }}/repository"
       become_user: centos
+      
 ...
